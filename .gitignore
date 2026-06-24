@@ -1,0 +1,4 @@
+# NUNCA commitear la clave privada de cosign. Solo cosign.pub va al repo;
+# cosign.key se pega como secret SIGNING_SECRET en GitHub y se queda fuera.
+cosign.key
+*.key

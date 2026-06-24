@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+#
+# Imagen OCI personalizada para los escritorios Bazzite de casa (issue #23, Fase 3).
+# Hornea la pila de identidad (SSSD/LDAP + autofs para homes NFS + oddjob-mkhomedir)
+# y el control parental (timekpr-next) sobre Bazzite GNOME nvidia-open, de modo que
+# el rol Ansible `bazzite_ldap` solo configure, no instale (su preflight exige que
+# /usr/sbin/sssd y /usr/sbin/oddjobd existan ya en la imagen).
+#
+# Se publica en: ghcr.io/juanjocop/bazzite-casa
+# Contrato con kxs-ansible -> inventory/group_vars/bazzite_desktops.yml:
+#   bazzite_image_ref: "ostree-image-signed:docker://ghcr.io/juanjocop/bazzite-casa:latest"
+#   bazzite_image_match: "bazzite-casa"
+
+name: bazzite-casa
+description: Bazzite GNOME nvidia-open con SSSD/LDAP, autofs y timekpr para la familia (issue #23)
+
+# Base = la MISMA variante que la ISO instalada (bazzite-gnome-nvidia-open).
+base-image: ghcr.io/ublue-os/bazzite-gnome-nvidia-open
+image-version: stable
+
+modules:
+  # --- Pila de identidad + control parental, horneada en /usr ---
+  - type: dnf
+    repos:
+      copr:
+        - kylegospo/timekpr-next      # control parental (issue #23)
+    install:
+      skip-unavailable: false
+      packages:
+        - sssd                 # /usr/sbin/sssd     <- contrato del preflight de bazzite_ldap
+        - sssd-ldap            # backend LDAP (Authentik)
+        - sssd-tools
+        - oddjob               # /usr/sbin/oddjobd  <- contrato del preflight de bazzite_ldap
+        - oddjob-mkhomedir     # creacion de home en el primer login (PAM)
+        - autofs               # montaje bajo demanda de los homes NFS (Fase 4)
+        - timekpr-next         # control parental
+
+  # --- Politica cosign + ficheros de firma: necesario para que el rebase a
+  #     ostree-image-signed verifique la firma de ESTA imagen. ---
+  - type: signing
