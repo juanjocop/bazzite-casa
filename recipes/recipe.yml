@@ -23,7 +23,7 @@ modules:
   - type: dnf
     repos:
       copr:
-        - kylegospo/timekpr-next      # control parental (issue #23)
+        - johanh/timekpr-next         # control parental (issue #23) -- COPR oficial de timekpr-nExT
     install:
       skip-unavailable: false
       packages:
