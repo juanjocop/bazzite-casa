@@ -35,6 +35,20 @@ modules:
         - autofs               # montaje bajo demanda de los homes NFS (Fase 4)
         - timekpr-next         # control parental
 
+  # --- Politicas de navegador (control parental Fase 5b, issue #23) horneadas en
+  #     /etc. Lo critico es DoH desactivado: un navegador con DNS-over-HTTPS se
+  #     salta el filtrado DNS del Pi-hole. Tambien SafeSearch/YouTube Restricted
+  #     (Brave/Chromium) y sin modo incognito. Los ficheros copiados:
+  #       /etc/brave/policies/managed/parental.json  + override flatpak
+  #       /etc/firefox/policies/policies.json         + override flatpak
+  #     Los overrides en /etc/flatpak/overrides/ dan a los navegadores Flatpak
+  #     (sandbox) acceso de lectura a sus directorios de politica; sin ellos los
+  #     JSON serian inertes. Verificar en chrome://policy y about:policies. ---
+  - type: files
+    files:
+      - source: system
+        destination: /
+
   # --- Politica cosign + ficheros de firma: necesario para que el rebase a
   #     ostree-image-signed verifique la firma de ESTA imagen. ---
   - type: signing

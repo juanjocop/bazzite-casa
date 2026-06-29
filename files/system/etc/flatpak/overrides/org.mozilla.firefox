@@ -1,0 +1,7 @@
+[Context]
+# Control parental Fase 5b (issue #23). Concede a Firefox Flatpak acceso de SOLO
+# LECTURA a /etc/firefox/policies para que lea policies.json. CAVEAT: el sandbox
+# de Firefox historicamente ignora /etc aunque se conceda (bug Mozilla 1682462);
+# si en about:policies no aparece la politica en el equipo real, la via fiable es
+# instalar la extension org.mozilla.firefox.systemconfig con las policies dentro.
+filesystems=/etc/firefox/policies:ro
