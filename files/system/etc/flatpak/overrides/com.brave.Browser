@@ -1,6 +1,0 @@
-[Context]
-# Control parental Fase 5b (issue #23). Brave Flatpak esta en sandbox y NO lee
-# /etc/brave/policies/managed por defecto. Este override le da acceso de SOLO
-# LECTURA al directorio de politica para que la politica gestionada (DoH off,
-# SafeSearch, sin incognito) surta efecto. Sin esto el JSON de politica es inerte.
-filesystems=/etc/brave/policies/managed:ro

@@ -34,16 +34,20 @@ modules:
         - oddjob-mkhomedir     # creacion de home en el primer login (PAM)
         - autofs               # montaje bajo demanda de los homes NFS (Fase 4)
         - timekpr-next         # control parental
+        # Navegador CONTROLABLE para el control parental (Fase 5b, issue #23): el
+        # RPM chromium lee /etc/chromium/policies/managed NATIVAMENTE. Los
+        # navegadores Flatpak (Brave/Firefox) NO pueden leer politicas de /etc
+        # (Flatpak reserva /etc; flatpak/flatpak#4709) -> por eso el control va por
+        # este chromium nativo, no por los flatpak.
+        - chromium
 
-  # --- Politicas de navegador (control parental Fase 5b, issue #23) horneadas en
-  #     /etc. Lo critico es DoH desactivado: un navegador con DNS-over-HTTPS se
-  #     salta el filtrado DNS del Pi-hole. Tambien SafeSearch/YouTube Restricted
-  #     (Brave/Chromium) y sin modo incognito. Los ficheros copiados:
-  #       /etc/brave/policies/managed/parental.json  + override flatpak
-  #       /etc/firefox/policies/policies.json         + override flatpak
-  #     Los overrides en /etc/flatpak/overrides/ dan a los navegadores Flatpak
-  #     (sandbox) acceso de lectura a sus directorios de politica; sin ellos los
-  #     JSON serian inertes. Verificar en chrome://policy y about:policies. ---
+  # --- Politica de navegador (control parental Fase 5b, issue #23) horneada en
+  #     /etc/chromium/policies/managed/parental.json. La lee el RPM chromium de
+  #     arriba (sin sandbox). Lo critico es DoH desactivado: un navegador con
+  #     DNS-over-HTTPS se salta el filtrado DNS del Pi-hole. Tambien
+  #     SafeSearch/YouTube Restricted (por-maquina) y sin incognito. Verificar en
+  #     chrome://policy. (Los menores deben usar ESTE chromium; los flatpak
+  #     Brave/Firefox quedan sin politica -> curarlos/quitarlos via bazzite_flatpak.) ---
   - type: files
     files:
       - source: system
