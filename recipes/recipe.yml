@@ -34,6 +34,24 @@ modules:
         - oddjob-mkhomedir     # creacion de home en el primer login (PAM)
         - autofs               # montaje bajo demanda de los homes NFS (Fase 4)
         - timekpr-next         # control parental
+        # Navegador CONTROLABLE para el control parental (Fase 5b, issue #23): el
+        # RPM chromium lee /etc/chromium/policies/managed NATIVAMENTE. Los
+        # navegadores Flatpak (Brave/Firefox) NO pueden leer politicas de /etc
+        # (Flatpak reserva /etc; flatpak/flatpak#4709) -> por eso el control va por
+        # este chromium nativo, no por los flatpak.
+        - chromium
+
+  # --- Politica de navegador (control parental Fase 5b, issue #23) horneada en
+  #     /etc/chromium/policies/managed/parental.json. La lee el RPM chromium de
+  #     arriba (sin sandbox). Lo critico es DoH desactivado: un navegador con
+  #     DNS-over-HTTPS se salta el filtrado DNS del Pi-hole. Tambien
+  #     SafeSearch/YouTube Restricted (por-maquina) y sin incognito. Verificar en
+  #     chrome://policy. (Los menores deben usar ESTE chromium; los flatpak
+  #     Brave/Firefox quedan sin politica -> curarlos/quitarlos via bazzite_flatpak.) ---
+  - type: files
+    files:
+      - source: system
+        destination: /
 
   # --- Politica cosign + ficheros de firma: necesario para que el rebase a
   #     ostree-image-signed verifique la firma de ESTA imagen. ---

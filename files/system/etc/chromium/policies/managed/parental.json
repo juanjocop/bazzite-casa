@@ -1,0 +1,8 @@
+{
+  "_comment": "Control parental Fase 5b (issue #23). Politica gestionada de Chromium. El RPM chromium (horneado en la imagen) lee /etc/chromium/policies/managed NATIVAMENTE, sin el sandbox de Flatpak (que reserva /etc y por eso los navegadores Flatpak no leen politicas alli). Lo CRITICO es DoH off: un navegador con DNS-over-HTTPS se salta el filtrado DNS del Pi-hole. Ademas SafeSearch/YouTube Restricted (por-maquina, solo escritorios de menores) y sin incognito.",
+  "DnsOverHttpsMode": "off",
+  "BuiltInDnsClientEnabled": false,
+  "ForceGoogleSafeSearch": true,
+  "ForceYouTubeRestrict": 1,
+  "IncognitoModeAvailability": 1
+}
