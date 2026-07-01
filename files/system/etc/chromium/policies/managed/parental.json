@@ -4,5 +4,7 @@
   "BuiltInDnsClientEnabled": false,
   "ForceGoogleSafeSearch": true,
   "ForceYouTubeRestrict": 1,
-  "IncognitoModeAvailability": 1
+  "IncognitoModeAvailability": 1,
+  "_comment_ext": "Bloquear la instalacion de CUALQUIER extension: cierra la evasion del filtrado por extension VPN/proxy. El adblock lo cubre el Pi-hole a nivel de red.",
+  "ExtensionInstallBlocklist": ["*"]
 }
