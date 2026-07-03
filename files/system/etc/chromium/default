@@ -1,0 +1,13 @@
+# Flags por defecto del Chromium RPM (lo lee el wrapper /usr/bin/chromium-browser).
+#
+# Control parental (issue #23, Fase 5b): fuerza el store 'basic' de contrasenas para
+# que el Chromium horneado NO use el llavero GNOME (libsecret/OSCrypt), ni para el
+# gestor de contrasenas ni para cifrar cookies. Evita el popup BLOQUEANTE de
+# gnome-keyring al abrir el navegador tras un login LDAP/SSSD (PAM no desbloquea el
+# llavero de login con la pass SSSD -> el llavero queda cerrado -> popup).
+#
+# Determinista y por-maquina; sobrevive al rebase. El trade-off (secretos con cifrado
+# 'basico' ofuscado en vez de derivado del llavero) es irrelevante para un navegador
+# de menores. El arreglo de raiz del llavero para toda la flota (pam_gnome_keyring)
+# es un seguimiento aparte.
+CHROMIUM_FLAGS="--password-store=basic"
