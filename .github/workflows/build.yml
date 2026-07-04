@@ -32,3 +32,14 @@ jobs:
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           maximize_build_space: true
+
+      - name: Prune old image versions
+        if: github.event_name != 'pull_request'   # no limpiar en PRs (token de fork es read-only)
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          packages: bazzite-casa
+          keep-n-tagged: 30            # conserva las 30 imagenes etiquetadas mas recientes
+          exclude-tags: latest         # nunca borrar :latest (contrato downstream con kxs-ansible)
+          delete-untagged: true        # borra untagged huerfanas (los hijos de imagenes vivas estan protegidos)
+          delete-orphaned-images: true # borra .sig cuya imagen ya no existe
+          token: ${{ github.token }}
